@@ -156,7 +156,10 @@ class CloudPlatform(models.AbstractModel):
                 "AWS_SECRET_ACCESS_KEY environment variable is required when "
                 "ir_attachment.location is 's3'."
             )
-            bucket_name = os.environ.get('AWS_BUCKETNAME')
+            bucket_name = (
+                os.environ.get('AWS_BUCKETNAME') or
+                os.environ.get('ODOO_DEV_KEEP_ATTACHMENT_S3')
+            )
             assert bucket_name, (
                 "AWS_BUCKETNAME environment variable is required when "
                 "ir_attachment.location is 's3'.\n"
