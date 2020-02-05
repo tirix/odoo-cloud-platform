@@ -101,16 +101,17 @@ class CloudPlatform(models.AbstractModel):
                 "ir_attachment.location is 'swift'."
             )
             container_name = os.environ.get('SWIFT_WRITE_CONTAINER')
-            assert container_name, (
-                "SWIFT_WRITE_CONTAINER environment variable is required when "
-                "ir_attachment.location is 'swift'.\n"
-                "Normally, 'swift' is activated on labs, integration "
-                "and production, but should not be used in dev environment"
-                " (or using a dedicated dev bucket, never using the "
-                "integration/prod bucket).\n"
-                "If you don't actually need a bucket, change the"
-                " 'ir_attachment.location' parameter."
-            )
+            if environment_name in ('prod', 'integration'):
+                assert container_name, (
+                    "SWIFT_WRITE_CONTAINER environment variable is required when "
+                    "ir_attachment.location is 'swift'.\n"
+                    "Normally, 'swift' is activated on labs, integration "
+                    "and production, but should not be used in dev environment"
+                    " (or using a dedicated dev bucket, never using the "
+                    "integration/prod bucket).\n"
+                    "If you don't actually need a bucket, change the"
+                    " 'ir_attachment.location' parameter."
+                )
             prod_container = bool(re.match(r'[a-z0-9-]+-odoo-prod',
                                            container_name))
             if environment_name == 'prod':
@@ -157,16 +158,17 @@ class CloudPlatform(models.AbstractModel):
                 "ir_attachment.location is 's3'."
             )
             bucket_name = os.environ.get('AWS_BUCKETNAME')
-            assert bucket_name, (
-                "AWS_BUCKETNAME environment variable is required when "
-                "ir_attachment.location is 's3'.\n"
-                "Normally, 's3' is activated on labs, integration "
-                "and production, but should not be used in dev environment"
-                " (or using a dedicated dev bucket, never using the "
-                "integration/prod bucket).\n"
-                "If you don't actually need a bucket, change the"
-                " 'ir_attachment.location' parameter."
-            )
+            if environment_name in ('prod', 'integration'):
+                assert bucket_name, (
+                    "AWS_BUCKETNAME environment variable is required when "
+                    "ir_attachment.location is 's3'.\n"
+                    "Normally, 's3' is activated on labs, integration "
+                    "and production, but should not be used in dev environment"
+                    " (or using a dedicated dev bucket, never using the "
+                    "integration/prod bucket).\n"
+                    "If you don't actually need a bucket, change the"
+                    " 'ir_attachment.location' parameter."
+                )
             prod_bucket = bool(re.match(r'[a-z-0-9]+-odoo-prod', bucket_name))
             if environment_name == 'prod':
                 assert prod_bucket, (
