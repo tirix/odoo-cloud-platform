@@ -100,7 +100,7 @@ class CloudPlatform(models.AbstractModel):
                 "SWIFT_PASSWORD environment variable is required when "
                 "ir_attachment.location is 'swift'."
             )
-            container_name = os.environ.get('SWIFT_WRITE_CONTAINER')
+            container_name = os.environ.get('SWIFT_WRITE_CONTAINER', '')
             if environment_name in ('prod', 'integration'):
                 assert container_name, (
                     "SWIFT_WRITE_CONTAINER environment variable is required when "
@@ -157,7 +157,7 @@ class CloudPlatform(models.AbstractModel):
                 "AWS_SECRET_ACCESS_KEY environment variable is required when "
                 "ir_attachment.location is 's3'."
             )
-            bucket_name = os.environ.get('AWS_BUCKETNAME')
+            bucket_name = os.environ.get('AWS_BUCKETNAME', '')
             if environment_name in ('prod', 'integration'):
                 assert bucket_name, (
                     "AWS_BUCKETNAME environment variable is required when "
