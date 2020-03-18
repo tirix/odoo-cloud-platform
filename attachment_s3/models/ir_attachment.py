@@ -128,6 +128,7 @@ class IrAttachment(models.Model):
                 bucket.download_fileobj(key, res)
                 res.seek(0)
                 read = base64.b64encode(res.read())
+                res.close()
             except ClientError:
                 read = ''
                 _logger.info(
@@ -149,6 +150,7 @@ class IrAttachment(models.Model):
             filename = 's3://%s/%s' % (bucket.name, key)
             try:
                 obj.upload_fileobj(file)
+                file.close()
             except ClientError as error:
                 # log verbose error from s3, return short message for user
                 _logger.exception(
