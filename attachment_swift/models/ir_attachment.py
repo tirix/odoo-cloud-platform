@@ -50,7 +50,7 @@ class SwiftSessionStore(object):
         return (auth_url, username, password, project_name)
 
     def get_session(self, auth_url=None, username=None, password=None,
-                    project_name=None):
+                    project_name=None, project_id=None):
         key = self._get_key(auth_url, username, password, project_name)
         session = self._sessions.get(key)
         if not session:
@@ -58,9 +58,11 @@ class SwiftSessionStore(object):
                 username=username,
                 password=password,
                 project_name=project_name,
+                project_id=project_id,
                 auth_url=auth_url,
                 project_domain_id='default',
                 user_domain_id='default',
+                
             )
             session = keystoneauth1.session.Session(
                 auth=auth,
@@ -88,6 +90,7 @@ class IrAttachment(models.Model):
         account = os.environ.get('SWIFT_ACCOUNT')
         password = os.environ.get('SWIFT_PASSWORD')
         project_name = os.environ.get('SWIFT_PROJECT_NAME')
+        project_id = os.environ.get('SWIFT_PROJECT_ID')
         if not project_name and os.environ.get('SWIFT_TENANT_NAME'):
             project_name = os.environ['SWIFT_TENANT_NAME']
             _logger.warning(
@@ -109,6 +112,7 @@ class IrAttachment(models.Model):
                 username=account,
                 password=password,
                 project_name=project_name,
+                project_id=project_id,
                 auth_url=host,
             )
             conn = swiftclient.client.Connection(
